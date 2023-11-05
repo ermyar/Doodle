@@ -4,7 +4,9 @@ import pygame
 from script.utils import load_image
 
 class PhysicsEntity:
+    '''класс, описывающий поведение физического тела в игре'''
     def __init__(self, game, e_type, pos, size):
+        '''создаёт объект класс PhysicsEntity'''
         self.game = game
         self.type = e_type
         self.pos = list(pos)
@@ -12,6 +14,7 @@ class PhysicsEntity:
         self.velocity = [0, 0, 0, 0, 0]
         self.tm = 0
     def update(self, movement):
+        '''обновляет параметры объекта, исходя из движения всей системы'''
         if (self.tm > 0):
             self.tm -= 1
             self.velocity[1] += 0.1
@@ -24,9 +27,11 @@ class PhysicsEntity:
 
         
     def render(self, surf):
+        '''отображает на дисплее картинку'''
         surf.blit(self.game.assets[self.type], self.pos)
         
     def render_over(self, surf):
+        '''продвинутое отображение. объект, выходяющий за границы окна, будет отображен с другой стороны (по сути это замыкание по кругу)'''
         if (self.pos[0] >= self.game.WIDTH):
             self.pos[0] -= self.game.WIDTH
             self.render(surf)
@@ -48,24 +53,29 @@ class PhysicsEntity:
     
         
 class Player(PhysicsEntity):
+    '''класс, дополняющий поведение игрока'''
     base = 'doodlick/'
     timer = 0
     reason = "none"
     
     def print(self, movement, surf):
+        '''обновление и отображение игрока на экран'''
         self.update(movement)
         self.render_over(surf)
         
     def custom(self):
+        '''обновление изображения игрока, используется при кастомизации игрока'''
         self.game.assets['player'] = load_image(self.base + self.game.set + 'left.png')
         
     def change(self, direction):
+        '''меняет ориентацию игрока, на соответствующую напрвлению его движения'''
         self.game.assets['player'] = load_image(self.base + self.game.set + direction)
             
 
 class Border(PhysicsEntity):
-    
+    '''класс, описывающий поведение платформ'''
     def generate(self, type): 
+        '''генерирует новою платформу, для гарантии того, что прыгунть и продолжить игру можно. между нагенерированной и исходной создаются пустые'''
         st = ""
         if (80 < type <= 100):
             st = "blue_hor5"
@@ -100,31 +110,25 @@ class Border(PhysicsEntity):
         return tmp
     
     def print(self, movement, surf):
+        '''отображение платформы на экран в зависимости от типа'''
         self.update(movement)
-        
-        if (self.type == 'blue_hor5'):
-            self.render_over(surf)
             
-        elif (self.type == 'broken0'):
+        if (self.type == 'broken0'):
             if (55 == self.tm):
                 self.type = "broken1"
-            self.render(surf)
         elif (self.type == 'broken1'):
             if (50 == self.tm):
                 self.type = "broken2"
-            self.render(surf)
         elif (self.type == 'broken2'):
             if (45 == self.tm):
                 self.type = "broken3"
+                
+        if (self.type != 'hide'):
             self.render(surf)
-        elif (self.type == 'broken3'):
-            self.render(surf)
-        elif (self.type == 'green_stable'):
-            self.render(surf)
-        elif (self.type == 'one_punch'):
-            self.render(surf)
+        
             
     def Rect(self, player):
+        '''моделирует поведение платформы, при контакте с игроком'''
         player_r = pygame.Rect(player.pos[0], player.pos[1] + player.size[1] - 1, player.size[0], 1)
 
         if (self.type == 'broken3' or self.type == 'broken1' or self.type == 'broken2' or self.type == 'hide'):
@@ -141,7 +145,10 @@ class Border(PhysicsEntity):
             
             
 class Item(Border):
+    '''класс, описывающий поведение предметов, что на платформах'''
+    
     def __init__(self, border):
+        '''создаёт объъект класса Item'''
         self.game = border.game
         self.tm = 0
         self.velocity = [0, 0, 0, 0, 0]
@@ -157,6 +164,7 @@ class Item(Border):
         
         
     def Rect(self, player):
+        '''моделирует поведение платформы, при контакте с игроком'''
         if (self.type == 'hat'):
             player_r = pygame.Rect(player.pos[0], player.pos[1], player.size[0], player.size[1])
             if player_r.colliderect(pygame.Rect(self.pos, self.size)):

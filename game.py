@@ -8,6 +8,7 @@ from script.highscore import *
 class Game:
 
     def __init__(self):
+        '''создает объект класса Game'''
         pygame.init()
         
         self.HEIGHT = 960
@@ -49,6 +50,7 @@ class Game:
         self.player = Player(self, 'player', (300, 710), (62, 60))
                 
     def menu(self):
+        '''регулируется поведение Меню игры, в нем можно запустить игру, выбрать скин для героя, посмотреть таблицы результатов. Также можно ввести имя для отображения его в таблице результатов'''
         print_image("environment/bck@2x.png", (0, 0), self.screen)
         username = ""
         shift = 0
@@ -82,6 +84,7 @@ class Game:
             self.clock.tick(60)   
             
     def pause(self, score):
+        '''Во время процесса игры, нажав ESC, можно выйти в меню(нажав на кнопку menu, либо esc), либо продолжить играть(нажав resume). Возвращает 1, если выходим в меню, и 0, если продолжаем играть.'''
         while True:
             print_image("environment/bck@2x.png", (0, 0), self.screen)
             print_text(self.screen, self.font, 'Total Score: ' + str(int(score)), (0, 0))
@@ -105,6 +108,7 @@ class Game:
         
     def run(self):
         
+        '''запускает процесс игры. Двигается герой с помошью стрелок вправо и влево. Возвращает счет игрока или -1, если решили во время паузы выйти в меню'''
         self.player = Player(self, 'player', (300, 710), (62, 60))
         self.player.custom()
         self.borders = [Border(self, "green_stable", (295, 770), (57, 15))]
@@ -199,6 +203,7 @@ class Game:
             self.clock.tick(60) 
 
     def custom(self):
+        '''Показывает досупные скины для персонажа. Возвращает называние последнего выбранного костюма, для выхода нужно нажать ESC или DONE'''
         choise = self.set
         pos = [(60, 150), (210, 150), (360, 150), (510, 150), (135, 320), (285, 320), (435, 320)]
         while True:        
@@ -229,6 +234,7 @@ class Game:
             self.clock.tick(60)
         
     def scoretable(self):
+        '''показывает таблицу результатов, упорядоченных по набранному счету, показывает не более 30 строк таблицы, чтобы перемещаться по ней, необходимо использовать стрелки вниз и вверх'''
         self.left = 0
         while True:
             print_image("environment/bck@2x.png", (0, 0), self.screen)

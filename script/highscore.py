@@ -2,6 +2,7 @@ from script.utils import *
 
 class Highscore:
     def __init__(self, game):
+        '''создаёт объукт класса Highscore'''
         self.game = game
         self.array = []
         self.left = 0
@@ -16,6 +17,7 @@ class Highscore:
         self.array.sort(reverse=True)
     
     def Add(self, score, username):
+        '''добавляет в таблицы результаты'''
         txt = open('data/name.txt', 'a')
         txt.write(username + '\n')
         txt.close()
@@ -26,6 +28,7 @@ class Highscore:
         self.array.sort(reverse=True)
         
     def print(self):
+        '''выводит таблицу на экран'''
         print_text(self.game.screen, self.game.font, "Local Records: ", (240, 0))
         for i in range(self.left, min(self.right, len(self.array))):
             print_text(self.game.screen, self.game.font, str(i + 1) + ".  " + self.array[i][1], (60, 50 + (i - self.left) * 30))
