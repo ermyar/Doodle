@@ -1,12 +1,13 @@
 import sys
 import pygame
+import random
 
-from script.entities import *
-from script.utils import *
-from script.highscore import *
+from script.utils import load_image, init_font, print_image, inputs, print_text
+from script.highscore import Highscore
+from script.border import Border
+from script.player import Player
 
 class Game:
-
     def __init__(self):
         '''создает объект класса Game'''
         pygame.init()
@@ -115,8 +116,11 @@ class Game:
         
         self.items = []
         
+        last_norm = 0
+        
         for i in range(20): 
-            self.borders.append(self.borders[-1].generate(random.randint(1, 80)))
+            self.borders.append(self.borders[last_norm].generate(random.randint(1, 80)))
+            last_norm = len(self.borders) - 1
             
         self.cnt = 0
         self.lst = 710
@@ -162,9 +166,12 @@ class Game:
             score = max(score, self.lst - self.player.pos[1] + absolut - self.lst)
                         
             while (self.borders[0].pos[1] > self.HEIGHT):
-                self.borders.pop(0)
                 if (self.borders[0].type[:-2] != "broken"):
-                    self.borders.append(self.borders[-1].generate(random.randint(1, 100)))
+                    self.borders.append(self.borders[last_norm].generate(random.randint(1, 100)))
+                    last_norm = len(self.borders) - 1
+                    
+                self.borders.pop(0)
+                last_norm -= 1
             
 
             for i in self.borders:

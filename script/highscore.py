@@ -1,4 +1,4 @@
-from script.utils import *
+from script.utils import print_text
 
 class Highscore:
     def __init__(self, game):

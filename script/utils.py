@@ -43,28 +43,29 @@ def inputs(event, username, shift):
             if (len(username) == 16):
                 return (username, shift)
             if (shift):
-                if (chr(event.key) == '1'):
-                    username += '!'
-                elif (chr(event.key) == '2'):
-                    username += '@'
-                elif (chr(event.key) == '3'):
-                    username += '#'
-                elif (chr(event.key) == '4'):
-                    username += '$'
-                elif (chr(event.key) == '5'):
-                    username += '%'
-                elif (chr(event.key) == '6'):
-                    username += '^'
-                elif (chr(event.key) == '7'):
-                    username += '&'
-                elif (chr(event.key) == '8'):
-                    username += '*'
-                elif (chr(event.key) == '9'):
-                    username += '('
-                elif (chr(event.key) == '0'):
-                    username += ')'
-                else:
-                    username += chr(event.key).upper()
+                match (chr(event.key)):
+                    case ('1'):
+                        username += '!'
+                    case ('2'):
+                        username += '@'
+                    case ('3'):
+                        username += '#'
+                    case ('4'):
+                        username += '$'
+                    case ('5'):
+                        username += '%'
+                    case ('6'):
+                        username += '^'
+                    case ('7'):
+                        username += '&'
+                    case ('8'):
+                        username += '*'
+                    case ('9'):
+                        username += '('
+                    case ('0'):
+                        username += ')'
+                    case _:
+                        username += chr(event.key).upper()
             else:
                 username += chr(event.key)
             
